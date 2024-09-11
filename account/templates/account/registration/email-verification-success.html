@@ -1,0 +1,39 @@
+{% include "store/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- inline css for body tag -->
+<style>
+    body {
+        background-color: gray;
+    }
+</style>
+
+<body>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout">
+
+        <div class="text-center">
+
+            <i class="fa fa-check-square-o fa-3x text-success" aria-hidden="true"></i>
+
+            <br>
+
+            <br>
+
+            <h5> <strong> Your Account is now active </strong> </h5>
+
+            <hr>
+
+            <br>
+
+            <p> Please click here to login </p>
+
+        </div>
+
+</body>
+
+{% endblock %}
