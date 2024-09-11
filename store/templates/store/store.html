@@ -1,0 +1,97 @@
+{% extends "./base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+
+<style>
+    .equal-size {
+    float: left;
+    width:  250px;
+    height: 250px;
+    object-fit: cover;
+}
+</style>
+<!-- Introduction section -->
+
+<section class="py-4 text-center container">
+
+    <div class="row py-lg-5">
+
+        <div class="col-lg-6 col-md-8 mx-auto">
+
+
+            <h4> Edenthought... Simplicity at it's finest. </h4>
+
+
+            <br>
+
+
+            <p class="lead text-muted">
+
+                Browse our extensive collection.
+
+            </p>
+
+
+            <br>
+
+            <a href="{% url 'register' %}" class="btn btn-primary my-2"> <i class="fa fa-user-plus" aria-hidden="true"></i> &nbsp; Create an account </a>
+
+
+        </div>
+
+    </div>
+
+
+</section>
+
+<!-- All products section -->
+
+<div class="album py-5 bg-light">
+
+    <div class="container">
+
+        <div class="pb-3 h5"> All products </div>
+
+        <hr>
+
+        <br>
+
+        <div class="row row-lg-12 row-cols-1 row-cols-sm-2 row-cols-md-5 col-lg-10 g-3">
+
+            {% for products in all_products %}
+
+            <div class="col col-sm-12 col-lg-6 mb-3">
+                <div class="card-group ">
+                    <div class="mx-auto card shadow-sm card-body">
+
+                        <img class="card-img-top img-thumbnail rounded float-left img-fluid equal-size" alt="Responsive image"
+                            src=" {{ products.images.url }}">
+
+                        <div class="card-body">
+                                <!-- {% url 'product_info' products.slug  %} -->
+                            <p class="card-text">
+                                <a class="text-info text-decoration-none"
+                                    href=" {{ products.get_absolute_url }} "> {{ products.title | capfirst }}
+                                </a>
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5> $ {{ products.price }} </h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
