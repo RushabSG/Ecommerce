@@ -1,0 +1,37 @@
+{% include "store/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- inline css for body tag -->
+<style>
+    body {
+        background-color: gray;
+    }
+</style>
+
+<body>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout">
+
+        <div class="text-center">
+
+            <i class="text-danger fa fa-3x fa-exclamation-triangle" aria-hidden="true"></i>
+
+            <br>
+
+            <br>
+
+            <h5> <strong> Payment Failed! </strong> </h5>
+
+            <hr>
+
+            <p> Your order was not processed successfully. </p>
+
+        </div>
+
+</body>
+
+{% endblock %}
