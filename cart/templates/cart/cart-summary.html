@@ -1,0 +1,213 @@
+{% include "store/base.html" %}
+
+
+{% load static %}
+{% load mathfilters %}
+
+
+{% block content %}
+
+
+<main class="pt-5">
+
+  <div class="container">
+
+    <h1 class="h5"> Shopping cart </h1>
+
+    <hr>
+
+    {% for item in cart %}
+
+    {% with product=item.product %}
+
+
+    <br>
+
+    <div class="row mb-4 border product-item">
+
+      <div class="col-md-3 col-lg-2 order-md-first bg-light">
+
+        <img class="img-fluid mx-auto d-block" width="200px" alt="Responsive image" src="{{ product.images.url }}">
+        <!-- Product image -->
+
+      </div>
+
+
+      <div class="col-md-9 col-lg-10 ps-md-3 ps-lg-10">
+
+        <a href="{{ product.get_absolute_url }}"
+          class="text-info  text-decoration-none"><!-- Product get absolute url -->
+
+          <h1 class="h5 pt-2"> {{ product.title }} </h1>
+
+        </a>
+
+        <div class="border">
+
+          <div class="col border-bottom">
+
+            <div class="row p-3">
+
+              <div class="col-6"> Product </div>
+
+              <div class="col-6 text-end"><span class="h6 fw-bold">$ {{ product.price|mul:item.qty }}<!-- Product price --> </span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col">
+
+            <div class="row p-3">
+
+              <div class="col-12">
+
+                <label for="select">Qty</label>
+
+                &nbsp;
+
+                <select id="select{{product.id}}">
+
+                  <option selected>
+
+                    {{item.qty}}
+
+                  </option>
+
+                  <option value="">1</option>
+
+                  <option value="">2</option>
+
+                  <option value="">3</option>
+
+                  <option value="">4</option>
+
+                </select>
+
+                <br> <br>
+
+                <button type="button" data-index="{{ product.id }}" class="btn btn-primary btn-sm update-button">
+                  <!-- instead of values we are using data-* because "values" update only one product at a time, but with data-index to update mulitple product at a time -->
+                  Update
+
+                </button>
+
+                &nbsp;
+
+                <button type="button" id="delete-button" data-index="{{ product.id }}"
+                  class="btn btn-danger btn-sm delete-button">
+                  Delete
+
+                </button>
+
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {% endwith %}
+
+    {% endfor %}
+
+
+    <div class="col-12 text-end">
+
+      <div class="h6 fw-bold"> Sub total: $ <div id="total" class="d-inline-flex"> {{ cart.get_total }}
+          <!-- cart.get_total -->
+        </div>
+      </div>
+
+      <br>
+
+      <div class="h6 fw-bold">
+        <a class="btn btn-alert navbar-btn btn-primary" type="button" href="{% url 'checkout' %}"> Procced to checkout
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <br>
+
+  <br>
+
+</main>
+
+<script>
+  // Delete button
+  $(document).on('click', '.delete-button', function (e) {
+    e.preventDefault();
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'cart-delete' %}",
+      data: {
+        product_id: $(this).data('index'),  // 'this' refers to current element that triggered the event.
+        // .data('index') gets value of 'data-index' attribute from the element
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        action: "post"
+      },
+
+      success: function (json) {
+        // console.log(json)
+
+        location.reload();
+
+        document.getElementById("cart-qty").textContent = json.qty
+
+        document.getElementById("total").textContent = json.total
+      },
+
+      error: function (xhr, status, error) {
+
+      }
+    });
+  });
+
+  // update button
+  $(document).on('click', '.update-button', function (e) {
+    e.preventDefault();
+
+    var theproductid = $(this).data('index');
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'cart-update' %}",
+      data: {
+        product_id: $(this).data('index'),  // 'this' refers to current element that triggered the event.
+        // .data('index') gets value of 'data-index' attribute from the element
+        product_quantity: $("#select" + theproductid + " option:selected").text(),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        action: "post"
+      },
+
+      success: function (json) {
+        // console.log(json)
+
+        location.reload(true); // aysnc update
+
+        document.getElementById("cart-qty").textContent = json.qty
+
+        document.getElementById("total").textContent = json.total
+      },
+
+      error: function (xhr, status, error) {
+
+      }
+    });
+  });
+
+</script>
+
+
+{% endblock %}
